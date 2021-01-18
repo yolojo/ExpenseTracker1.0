@@ -122,7 +122,7 @@ mybutton_2 = Button(root, text= "SAVE DATE", command = grab_date).pack(anchor = 
 label_4 = Label(root, text = "")
 
 myquit = Button(root, text = "CONTINUE", command = pop_up).pack(anchor = W)
-myquery = Button(root, text = "SHOW DB", command = query).pack(anchor = W)
+#myquery = Button(root, text = "SHOW DB", command = query).pack(anchor = W)
 
 label_4.pack()
 
