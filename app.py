@@ -4,7 +4,21 @@ from tkinter import messagebox
 from tkcalendar import *
 import pandas as pd
 import numpy as np
+import sqlite3 
 
+#Creating a database connection and Table
+conn = sqlite3.connect("expense_track.db")
+
+c = conn.cursor()
+
+#c.execute("""CREATE TABLE ExpenseLog (
+#            Category text,
+#            Amount integer,
+#            Date text
+#            )""")
+
+
+#Creating root and GUI Title 
 root = Tk()
 root.title("Expense Calculator")
 
@@ -53,10 +67,37 @@ def pop_up():
         expense_list.append(my_expense.get())
         expense_list.append(amount_input.get()) 
         expense_list.append(cal.get_date())
-        Label(root, text = "Changes saved!").pack()
+        Label(root, text = "Changes saved!", command = submit()).pack()
     else:
         Label(root, text = "Changes not saved!").pack()
     return None
+
+def submit():
+    conn = sqlite3.connect("expense_track.db")
+    c = conn.cursor()
+
+    #Inserting into the table
+    c.execute("INSERT INTO ExpenseLog VALUES (:Category, :Amount, :Date)",
+                {
+                    "Category": my_expense.get(),
+                    "Amount": amount_input.get(),
+                    "Date": cal.get_date()
+                })
+
+    conn.commit()
+    conn.close()    
+
+def query():
+    conn = sqlite3.connect("expense_track.db")
+    c = conn.cursor()
+
+    #Selecting the table
+    c.execute("SELECT * FROM ExpenseLog")
+    logs = c.fetchall()
+    print(logs)
+    conn.commit()
+
+    conn.close()   
 
 #For Loop to create Expense Category Radio Buttons
 for item, category in EXPENSES:
@@ -81,12 +122,18 @@ mybutton_2 = Button(root, text= "SAVE DATE", command = grab_date).pack(anchor = 
 label_4 = Label(root, text = "")
 
 myquit = Button(root, text = "CONTINUE", command = pop_up).pack(anchor = W)
+myquery = Button(root, text = "SHOW DB", command = query).pack(anchor = W)
+
 label_4.pack()
+
+conn.commit()
+
+conn.close()
 
 root.mainloop()
 
 #Creating Excel File for Output
-expense_list_array = np.array(expense_list)
-new_array = np.reshape(expense_list_array, (int((len(expense_list)/3)),3))
-df = pd.DataFrame(new_array, columns = ["Category", "Amount", "Date"])
-df.to_excel("~/Desktop/Python/Expense Tracker/Output.xlsx")
+#expense_list_array = np.array(expense_list)
+#new_array = np.reshape(expense_list_array, (int((len(expense_list)/3)),3))
+#df = pd.DataFrame(new_array, columns = ["Category", "Amount", "Date"])
+#df.to_excel("~/Desktop/Python/Expense Tracker/ExpenseTracker2021/Output.xlsx")
