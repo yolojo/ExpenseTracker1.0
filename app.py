@@ -132,8 +132,4 @@ conn.close()
 
 root.mainloop()
 
-#Creating Excel File for Output
-#expense_list_array = np.array(expense_list)
-#new_array = np.reshape(expense_list_array, (int((len(expense_list)/3)),3))
-#df = pd.DataFrame(new_array, columns = ["Category", "Amount", "Date"])
-#df.to_excel("~/Desktop/Python/Expense Tracker/ExpenseTracker2021/Output.xlsx")
+
